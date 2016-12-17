@@ -1,25 +1,24 @@
 var WINDOW_WIDTH = 1024;
-var WINDOW_HEIGHT = 500;
+var WINDOW_HEIGHT = 768;
 var RADIUS = 8;
 var MARGIN_TOP = 60;
 var MARGIN_LEFT = 30;
 
-//var endTime = new Date();
-//endTime.setTime( endTime.getTime() + 3600*1000 )
-var curShowTimeSeconds = 0
+const endTime = new Date(2016,11,18,24,00,00);
+var curShowTimeSeconds = 0;
 
 var balls = [];
 const colors = ["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"]
 
 window.onload = function(){
 
-//  WINDOW_WIDTH = document.body.clientWidth
-//  WINDOW_HEIGHT = document.body.clientHeight
+    WINDOW_WIDTH = document.body.clientWidth
+    WINDOW_HEIGHT = document.body.clientHeight
 
-//  MARGIN_LEFT = Math.round(WINDOW_WIDTH /10);
-//  RADIUS = Math.round(WINDOW_WIDTH * 4 / 5 / 108)-1
-//
-//  MARGIN_TOP = Math.round(WINDOW_HEIGHT /5);
+    MARGIN_LEFT = Math.round(WINDOW_WIDTH /10);
+    RADIUS = Math.round(WINDOW_WIDTH * 4 / 5 / 108)-1
+
+    MARGIN_TOP = Math.round(WINDOW_HEIGHT /5);
 
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
@@ -40,9 +39,10 @@ window.onload = function(){
 
 function getCurrentShowTimeSeconds() {
     var curTime = new Date();
-    var ret = curTime.getHours() * 3600 + curTime.getMinutes() * 60 + curTime.getSeconds();
+    var ret = endTime.getTime() - curTime.getTime();
+    ret = Math.round( ret/1000 )
 
-    return ret;
+    return ret >= 0 ? ret : 0;
 }
 
 function update(){
@@ -92,19 +92,12 @@ function updateBalls(){
     for( var i = 0 ; i < balls.length ; i ++ ){
 
         balls[i].x += balls[i].vx;
-
-    var c = 1.0;
-	if( balls[i].y + RADIUS + balls[i].vy >= WINDOW_HEIGHT ){
-	    c = ( WINDOW_HEIGHT - (balls[i].y+ RADIUS) ) / balls[i].vy;
-	    console.log( c );	
-	}
-        
-	balls[i].y += balls[i].vy;
-	balls[i].vy += c * balls[i].g;;
+        balls[i].y += balls[i].vy;
+        balls[i].vy += balls[i].g;
 
         if( balls[i].y >= WINDOW_HEIGHT-RADIUS ){
             balls[i].y = WINDOW_HEIGHT-RADIUS;
-	    balls[i].vy = - Math.abs(balls[i].vy)*0.75;
+            balls[i].vy = - balls[i].vy*0.75;
         }
     }
 
@@ -178,3 +171,4 @@ function renderDigit( x , y , num , cxt ){
                 cxt.fill()
             }
 }
+
